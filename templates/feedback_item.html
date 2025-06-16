@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Fine Arts Semantic Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Fine Arts Semantic Search</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('help_page') }}">Help</a></li>
+                    <li><a href="{{ url_for('feedback_page') }}" class="active">Provide Feedback</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="feedback-progress">
+            <div class="progress-info">
+                <h3>Query {{ query_number }} of {{ total_queries }}: "{{ query }}"</h3>
+                <p>Result {{ result_number }} of {{ total_results_for_query }} for this query</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ progress_percentage }}%"></div>
+                </div>
+                <p class="progress-text">{{ progress_percentage }}% Complete</p>
+            </div>
+            
+            <div class="feedback-actions-top">
+                <a href="{{ url_for('stop_feedback') }}" class="stop-feedback-btn">Stop Feedback</a>
+            </div>
+        </section>
+
+        <section class="feedback-question">
+            <h2>Is this result relevant to the query: <em>"{{ query }}"</em>?</h2>
+            
+            <div class="feedback-result">
+                <div class="artwork-card-large">
+                    <div class="artwork-image-large">
+                        <img src="{{ result.artwork.image_url }}" alt="{{ result.artwork.title }} by {{ result.artwork.artist }}">
+                    </div>
+                    <div class="artwork-info-large">
+                        <h3>{{ result.artwork.title }}</h3>
+                        <p class="artist">{{ result.artwork.artist }}</p>
+                        <p class="relevance">Search Relevance: {{ "%.2f"|format(result.similarity * 100) }}%</p>
+                        <a href="{{ result.artwork.museum_url }}" target="_blank" class="museum-link">View in Museum</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feedback-buttons">
+                <form method="post" action="{{ url_for('submit_feedback') }}" style="display: inline;">
+                    <input type="hidden" name="is_relevant" value="true">
+                    <button type="submit" class="relevant-btn">✓ Relevant</button>
+                </form>
+                
+                <form method="post" action="{{ url_for('skip_feedback') }}" style="display: inline;">
+                    <button type="submit" class="skip-btn">Skip (Not Relevant)</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Fine Arts Semantic Search. Thank you for your feedback!</p>
+        </div>
+    </footer>
+</body>
+</html>

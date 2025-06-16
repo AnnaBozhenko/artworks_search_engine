@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Fine Arts Semantic Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Fine Arts Semantic Search</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('help_page') }}">Help</a></li>
+                    <li><a href="{{ url_for('feedback_page') }}" class="active">Provide Feedback</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="feedback-intro">
+            <h2>Help Improve Our Search Results</h2>
+            <p>Your feedback helps us improve the relevance of our semantic search engine. You'll be shown search results for predefined queries and asked to evaluate their relevance.</p>
+            
+            <div class="feedback-info">
+                <h3>What you'll be doing:</h3>
+                <ul>
+                    <li>You'll see search results for <strong>{{ total_queries }} different queries</strong></li>
+                    <li>For each result, you'll be asked: <em>"Is this result relevant to the query?"</em></li>
+                    <li>Click <strong>"Relevant"</strong> if the artwork matches the query</li>
+                    <li>Click <strong>"Skip"</strong> if the artwork is not relevant</li>
+                    <li>You can stop the process at any time</li>
+                </ul>
+            </div>
+
+            <div class="feedback-warning">
+                <h3>⚠️ Important Information:</h3>
+                <ul>
+                    <li>This process may take 10-15 minutes to complete</li>
+                    <li>You'll evaluate approximately 50-100 search results</li>
+                    <li>Your feedback will be saved anonymously</li>
+                    <li>You can stop and resume later if needed</li>
+                </ul>
+            </div>
+
+            <div class="feedback-actions">
+                <a href="{{ url_for('start_feedback') }}" class="start-feedback-btn">Start Providing Feedback</a>
+                <a href="{{ url_for('index') }}" class="back-btn">Back to Search</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Fine Arts Semantic Search. Thank you for helping us improve!</p>
+        </div>
+    </footer>
+</body>
+</html>

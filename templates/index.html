@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fine Arts Semantic Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Fine Arts Semantic Search</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('feedback_page') }}">Feedback</a></li>
+                    <li><a href="{{ url_for('help_page') }}">Help</a></li>
+                    {% if has_history %}
+                    <li><a href="{{ url_for('reset') }}" class="reset-btn">Reset Search</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="search-section">
+            <form action="{{ url_for('search') }}" method="post" class="search-form">
+                <div class="search-container">
+                    <input 
+                        type="text" 
+                        name="query" 
+                        placeholder="Search for artworks, artists, styles..." 
+                        value="{{ query }}" 
+                        required
+                        class="search-input"
+                    >
+                    <button type="submit" class="search-button">Search</button>
+                </div>
+                
+                {% if has_history %}
+                <div class="history-option">
+                    <input type="checkbox" id="consider_history" name="consider-history">
+                    <label for="consider-history">Consider previous searches</label>
+                </div>
+                {% endif %}
+            </form>
+
+            {% if history %}
+            <div class="search-history">
+                <h3>Your search history:</h3>
+                <ul>
+                    {% for item in history %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </section>
+
+        {% if results %}
+        <section class="results-section">
+            <h2>Search Results 
+                <span class="result-count">
+                (Showing <span id="shown_count">{{ results|length }}</span> of <span id="total_count">{{ total_count }}</span>)
+                </span></h2>
+            <div class="results-grid" id="results_container">
+                {% for result in results %}
+                <div class="artwork-card">
+                    <div class="artwork-image">
+                        <img src="{{ result.image_url }}" alt="{{ result.title }} by {{ result.artist }}">
+                    </div>
+                    <div class="artwork-info">
+                        <h3>{{ result.title }}</h3>
+                        <p class="artist">{{ result.artist }}</p>
+                        <p class="museum">Museum: {{ result.museum }}, {{ result.museum_region }}, {{ result.museum_country }} </p>
+                        <p class="creation-period">Dates: {{ result.date_start }} - {{ result.date_end }} </p>
+                        <a href="{{ result.url }}" target="_blank" class="museum-link">View in Museum</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% if has_more %}
+            <div class="load-more-container">
+                <button id="load_more_btn" class="load-more-button" data-offset="{{ results|length }}">Load More</button>
+                <div id="loading_spinner" class="loading-spinner hidden"></div>
+            </div>
+            {% endif %}
+        </section>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const loadMoreBtn = document.getElementById('load_more_btn');
+                const resultsContainer = document.getElementById('results_container');
+                const loadingSpinner = document.getElementById('loading_spinner');
+                const shownCountElement = document.getElementById('shown_count');
+                const totalCountElement = document.getElementById('total_count');
+                
+                if (loadMoreBtn) {
+                    loadMoreBtn.addEventListener('click', function() {
+                        const offset = parseInt(loadMoreBtn.getAttribute('data-offset'));
+                        const batchSize = 10;
+                        
+                        // Show loading spinner
+                        loadMoreBtn.classList.add('hidden');
+                        loadingSpinner.classList.remove('hidden');
+                        
+                        // Fetch more results
+                        fetch(`/load_more?offset=${offset}&batch_size=${batchSize}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                // Hide loading spinner
+                                loadingSpinner.classList.add('hidden');
+                                
+                                // Add new results to the container
+                                data.results.forEach(result => {
+                                    const artworkCard = document.createElement('div');
+                                    artworkCard.className = 'artwork-card';
+                                    
+                                    artworkCard.innerHTML = `
+                                        <div class="artwork-image">
+                                            <img src="${result.image_url}" alt="${result.title} by ${result.artist}">
+                                        </div>
+                                        <div class="artwork-info">
+                                            <h3>${result.title}</h3>
+                                            <p class="artist">${result.artist}</p>
+                                            <a href="${result.url}" target="_blank" class="museum-link">View in Museum</a>
+                                        </div>
+                                    `;
+                                    
+                                    resultsContainer.appendChild(artworkCard);
+                                });
+                                
+                                // Update shown count
+                                const currentShown = parseInt(shownCountElement.textContent);
+                                shownCountElement.textContent = currentShown + data.results.length;
+                                
+                                // Update load more button
+                                if (data.has_more) {
+                                    loadMoreBtn.setAttribute('data-offset', data.next_offset);
+                                    loadMoreBtn.classList.remove('hidden');
+                                } else {
+                                    loadMoreBtn.remove();
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error loading more results:', error);
+                                loadingSpinner.classList.add('hidden');
+                                loadMoreBtn.classList.remove('hidden');
+                                alert('Failed to load more results. Please try again.');
+                            });
+                    });
+                }
+            });
+        </script>
+        {% elif query %}
+        <section class="no-results">
+            <p>No artworks found matching your search. Try different keywords.</p>
+        </section>
+        {% else %}
+        <section class="welcome-section">
+            <h2>Welcome to Fine Arts Semantic Search</h2>
+            <p>Enter a search query to discover beautiful artworks from around the world.</p>
+            <p>Our semantic search understands the meaning behind your words, not just exact matches.</p>
+        </section>
+        {% endif %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Fine Arts Semantic Search. Powered by <a href="https://www.sbert.net/" target="_blank"> &#129303 Sentence Transformers</a>.</p>
+        </div>
+    </footer>
+</body>
+</html>

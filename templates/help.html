@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help - Fine Arts Semantic Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Fine Arts Semantic Search</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('help_page') }}" class="active">Help</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container help-content">
+        <h2>How to Use the Fine Arts Semantic Search</h2>
+        
+        <section class="help-section">
+            <h3>Basic Search</h3>
+            <p>Enter keywords related to artworks, artists, styles, or themes in the search box and click "Search" to find relevant artworks.</p>
+            <p>Examples of search queries:</p>
+            <ul>
+                <li>"Impressionist paintings"</li>
+                <li>"Landscapes with water"</li>
+                <li>"Renaissance portraits"</li>
+                <li>"Surrealist dreams"</li>
+            </ul>
+        </section>
+        
+        <section class="help-section">
+            <h3>Contextual Search</h3>
+            <p>Our search engine remembers your previous searches to provide more contextual results:</p>
+            <ol>
+                <li>Check the "Consider previous searches" box to include your search history in the current query.</li>
+                <li>This is useful when refining your search or exploring related topics.</li>
+                <li>For example, if you first search for "Monet" and then "water paintings" with history enabled, the system will understand you're likely looking for Monet's water-themed works.</li>
+            </ol>
+        </section>
+        
+        <section class="help-section">
+            <h3>Resetting Your Search</h3>
+            <p>To start a completely new search without any influence from previous queries:</p>
+            <ol>
+                <li>Click the "Reset Search" button in the navigation bar.</li>
+                <li>This will clear your search history and allow you to begin fresh.</li>
+            </ol>
+        </section>
+        
+        <section class="help-section">
+            <h3>Understanding Results</h3>
+            <p>Each artwork in the results includes:</p>
+            <ul>
+                <li><strong>Title:</strong> The name of the artwork</li>
+                <li><strong>Artist:</strong> The creator of the artwork</li>
+                <li><strong>Museum:</strong> Museum name and location (region, country)</li>
+                <li><strong>View in Museum:</strong> A link to the official museum page where the artwork is displayed</li>
+            </ul>
+        </section>
+        
+        <section class="help-section">
+            <h3>About Semantic Search</h3>
+            <p>Unlike traditional keyword search, our semantic search understands the meaning behind your words:</p>
+            <ul>
+                <li>It can find relevant artworks even if they don't contain the exact words you searched for.</li>
+                <li>It understands relationships between concepts (e.g., searching for "melancholy" might find "The Scream" by Edvard Munch).</li>
+                <li>It's powered by Hugging Face's sentence-transformers, a state-of-the-art natural language processing model.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Fine Arts Semantic Search. Powered by <a href="https://www.sbert.net/" target="_blank"> &#129303 Sentence Transformers</a>.</p>
+        </div>
+    </footer>
+</body>
+</html>

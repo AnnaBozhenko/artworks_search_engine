@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Fine Arts Semantic Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Fine Arts Semantic Search</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('help_page') }}">Help</a></li>
+                    <li><a href="{{ url_for('feedback_page') }}" class="active">Provide Feedback</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="feedback-progress">
+            <div class="progress-info">
+                <h3>Query {{ query_number }} of {{ total_queries }}: "{{ query }}"</h3>
+                <p>Please evaluate the relevance of each result below. Check "Is Relevant" for artworks that match the query.</p>
+                <div class="feedback-instruction">
+                    <strong>Important:</strong> All results will be recorded - both relevant and irrelevant selections help improve our search engine.
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ progress_percentage }}%"></div>
+                </div>
+                <p class="progress-text">{{ progress_percentage }}% Complete</p>
+            </div>
+            
+            <div class="feedback-actions-top">
+                <a href="{{ url_for('stop_feedback') }}" class="stop-feedback-btn">Stop Feedback</a>
+            </div>
+        </section>
+
+        <form method="post" action="{{ url_for('submit_query_feedback') }}" id="feedback-form">
+            <section class="feedback-grid-section">
+                <div class="feedback-grid">
+                    {% for result in results %}
+                    <div class="feedback-card" data-index="{{ loop.index0 }}">
+                        <div class="feedback-card-image" onclick="openMuseumLink('{{ result.url }}')">
+                            <img src="{{ result.image_url }}" alt="{{ result.title }} by {{ result.artist }}">
+                            <div class="image-overlay">
+                                <span>Click to view in museum</span>
+                            </div>
+                        </div>
+                        
+                        <div class="feedback-card-info">
+                            <h4>{{ result.title }}</h4>
+                            <p class="artist-name">{{ result.artist }}</p>
+                        </div>
+                        
+                        <div class="feedback-card-actions">
+                            <label class="relevant-checkbox">
+                                <input type="checkbox" name="relevant_results" value="{{ loop.index0 }}" id="result-{{ loop.index0 }}">
+                                <span class="checkbox-label">Is Relevant</span>
+                            </label>
+                        </div>
+                        
+                        <!-- Tooltip for hover information -->
+                        <div class="card-tooltip">
+                            <strong>{{ result.title }}</strong><br>
+                            <em>by {{ result.artist }}</em><br>
+                            <small>Rank: {{ loop.index }} of 10</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="feedback-submit-section">
+                <div class="submit-info">
+                    <p>Selected <span id="selected-count">0</span> out of 10 results as relevant.</p>
+                    <p class="data-info">All 10 results will be saved with their relevance status (relevant/irrelevant).</p>
+                </div>
+                <div class="submit-actions">
+                    <button type="submit" class="submit-feedback-btn">Submit All Results & Continue</button>
+                    <button type="button" class="skip-query-btn" onclick="submitWithoutSelections()">Submit as All Irrelevant</button>
+                </div>
+            </section>
+        </form>
+    </main>
+
+    <script>
+        // Handle checkbox selection counting
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('input[name="relevant_results"]');
+            const selectedCount = document.getElementById('selected-count');
+            
+            function updateCount() {
+                const checked = document.querySelectorAll('input[name="relevant_results"]:checked').length;
+                selectedCount.textContent = checked;
+            }
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateCount);
+            });
+            
+            // Initialize count
+            updateCount();
+        });
+        
+        // Handle museum link opening
+        function openMuseumLink(url) {
+            window.open(url, '_blank');
+        }
+        
+        // Handle submit without selections (all irrelevant)
+        function submitWithoutSelections() {
+            // Uncheck all checkboxes to ensure all are marked as irrelevant
+            const checkboxes = document.querySelectorAll('input[name="relevant_results"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // Submit the form
+            document.getElementById('feedback-form').submit();
+        }
+        
+        // Handle card hover tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.feedback-card');
+            
+            cards.forEach(card => {
+                const tooltip = card.querySelector('.card-tooltip');
+                
+                card.addEventListener('mouseenter', function(e) {
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = e.pageX + 10 + 'px';
+                    tooltip.style.top = e.pageY + 10 + 'px';
+                });
+                
+                card.addEventListener('mousemove', function(e) {
+                    tooltip.style.left = e.pageX + 10 + 'px';
+                    tooltip.style.top = e.pageY + 10 + 'px';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    tooltip.style.display = 'none';
+                });
+            });
+        });
+    </script>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Fine Arts Semantic Search. Thank you for your feedback!</p>
+        </div>
+    </footer>
+</body>
+</html>

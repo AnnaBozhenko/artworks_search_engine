@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Complete - Fine Arts Semantic Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Fine Arts Semantic Search</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('help_page') }}">Help</a></li>
+                    <li><a href="{{ url_for('feedback_page') }}" class="active">Provide Feedback</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="feedback-complete">
+            <div class="completion-message">
+                <h2>🎉 Thank You for Your Feedback!</h2>
+                <p>You have successfully completed the feedback process. Your input is invaluable in helping us improve our semantic search engine.</p>
+                
+                <div class="completion-info">
+                    <h3>What happens next?</h3>
+                    <ul>
+                        <li>Your feedback has been saved and will be used to improve our search algorithms</li>
+                        <li>The data will help us better understand what makes search results relevant</li>
+                        <li>Your contributions will benefit all users of the search engine</li>
+                    </ul>
+                </div>
+
+                <div class="completion-actions">
+                    <a href="{{ url_for('index') }}" class="primary-btn">Return to Search</a>
+                    <a href="{{ url_for('feedback_page') }}" class="secondary-btn">Provide More Feedback</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Fine Arts Semantic Search. Thank you for helping us improve!</p>
+        </div>
+    </footer>
+</body>
+</html>

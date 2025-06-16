@@ -1,0 +1,23 @@
+services:
+  redis:
+    image: redislabs/redismod
+    ports:
+      - '6379:6379'
+  app:
+    build:
+      context: .
+    # flask requires SIGINT to stop gracefully
+    # (default stop signal from Compose is SIGTERM)
+    stop_signal: SIGINT
+    ports:
+      - '127.0.0.1:8000:8000'
+    working_dir: /artworks
+    # use mount ONLY for DEVELOPMENT
+    volumes:
+      - ./:/artworks 
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    command: tail -f /dev/null
+    # command: python3 app.py
