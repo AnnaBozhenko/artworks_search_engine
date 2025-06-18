@@ -107,6 +107,7 @@ embeddings = Dataset.from_dict({"bert-base-dot-v5": encoded_data})  # 👈 keep 
 embeddings.push_to_hub(repo_name, private=private)
 ```
 </details>
+
 ---
 
 ### 3. Dockerize and run the application
