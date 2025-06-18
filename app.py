@@ -114,7 +114,7 @@ ds = load_dataset(dataset_checkpoint, split="train")
 
 # embeddings = np.array(ds['embeddings']).astype(np.float32)
 # TODO: need to leverage another storage for embeddings 
-embeddings = load_from_disk(f"artwork_embeddings/artwork-bert-base-dot-v5-embeddings").with_format("numpy")[:]['bert-base-dot-v5']
+embeddings = load_dataset(os.getenv('EMBEDDED_ARTWORKS_FIELD'), split="train").with_format("numpy")[:]['bert-base-dot-v5']
 # embeddings = np.array(embeddings['mpnet-base-dot-v1'][:]).astype("float32")
 dim = embeddings.shape[1]
 
